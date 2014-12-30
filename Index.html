@@ -62,21 +62,21 @@
                 </div>
 
                 <div class="span2">
-                    <div class="control-group" id="toastTypeGroup">
+                    <div class="control-group" id="MsgTypeGroup">
                         <div class="controls">
                             <label>Alert Type</label>
                             <label class="radio">
-                                <input type="radio" name="toasts" value="success" checked />
+                                <input type="radio" name="Msgs" value="success" checked />
                                 Success
                             </label>
                             <label class="radio">
-                                <input type="radio" name="toasts" value="info" />Info
+                                <input type="radio" name="Msgs" value="info" />Info
                             </label>
                             <label class="radio">
-                                <input type="radio" name="toasts" value="warning" />Warning
+                                <input type="radio" name="Msgs" value="warning" />Warning
                             </label>
                             <label class="radio">
-                                <input type="radio" name="toasts" value="error" />Error
+                                <input type="radio" name="Msgs" value="error" />Error
                             </label>
                         </div>
                     </div>
@@ -160,12 +160,12 @@
             </div>
 
             <div class="row">
-                <button type="button" class="btn btn-primary" id="showtoast">Show Msg</button>
+                <button type="button" class="btn btn-primary" id="showMsg">Show Msg</button>
 
             </div>
 
             <div class="row" style='margin-top: 25px;'>
-                <pre id='toastrOptions'></pre>
+                <pre id='MsgOptions'></pre>
             </div>
         </div>
     </section>
@@ -202,8 +202,7 @@
 
         $(function () {
             var i = -1;
-            var toastCount = 0;
-            var $toastlast;
+          
 
             var getMessage = function () {
                 var msgs = ['Model Dialog for Web Applications',
@@ -219,11 +218,11 @@
 
                 return msgs[i];
             };
-            $('#showtoast').click(function () {
+            $('#showMsg').click(function () {
                 var Msg = '',tit='';
 
-                var toastIndex = toastCount++;
-             //   var type = $("#toastTypeGroup input:radio:checked").val();
+                var MsgIndex = MsgCount++;
+             
                 var text = $('#message').val();
                 var title = $('#title').val() || '';
                 var closeText = $('#closeText').val() || '';
@@ -238,7 +237,7 @@
                 var titleColor = $('#titleColor');
 
                 var options = {
-                    type : $("#toastTypeGroup input:radio:checked").val(),
+                    type: $("#MsgTypeGroup input:radio:checked").val(),
 
                     autoHide: $('#autoHide').prop('checked'),
                     progressBar: $('#progressBar').prop('checked'),
@@ -246,12 +245,7 @@
                     position: $('#positionGroup input:radio:checked').val() || 'top-right'
 
                 };
-
-                //if ($('#addBehaviorOnToastClick').prop('checked')) {
-                //    toastr.options.onclick = function () {
-                //        alert('You can perform some custom action after a toast goes away');
-                //    };
-                //}
+ 
 
 
                 if (stayTime.val().length) {
@@ -297,33 +291,25 @@
 
               if (Jmsg.find('#okBtn').length) {
                   Jmsg.delegate('#okBtn', 'click', function () {
-                              alert('you clicked me. i was toast #' + toastIndex + '. goodbye!');
+                      alert('you clicked me. Count #' + MsgIndex + '. goodbye!');
                               Jmsg.remove();
                   });
               }
               if (Jmsg.find('#surpriseBtn').length) {
                   Jmsg.delegate('#surpriseBtn', 'click', function () {
-                        alert('Surprise! you clicked me. i was toast #' + toastIndex + '. You could perform an action here.');
+                      alert('Surprise! you clicked me. count #' + MsgIndex + '. You could perform an action here.');
                     });
               }
               Msg = "\"" + Msg + "\"";
               tit = "\"" + tit + "\"";
               if (title.length) {
-                  $("#toastrOptions").text("Syntax: $.SPMsgBox.Show(" + Msg + "," + tit + ")\n\$.SPMsgBox.options = " + JSON.stringify(options, null, 2));
-              } else { $("#toastrOptions").text("Syntax: $.SPMsgBox.Show(" + Msg + ")\n\$.SPMsgBox.options = " + JSON.stringify(options, null, 2)); }
+                  $("#MsgOptions").text("Syntax: $.SPMsgBox.Show(" + Msg + "," + tit + ")\n\$.SPMsgBox.options = " + JSON.stringify(options, null, 2));
+              } else { $("#MsgOptions").text("Syntax: $.SPMsgBox.Show(" + Msg + ")\n\$.SPMsgBox.options = " + JSON.stringify(options, null, 2)); }
 
 
 
             });
-            function getLastToast() {
-                return $toastlast;
-            }
-            $('#clearlasttoast').click(function () {
-                toastr.clear(getLastToast());
-            });
-            $('#cleartoasts').click(function () {
-                toastr.clear();
-            });
+         
         })
     </script>
 </body>
