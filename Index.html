@@ -66,17 +66,20 @@
                         <div class="controls">
                             <label>Alert Type</label>
                             <label class="radio">
-                                <input type="radio" name="Msgs" value="success" checked />
+                                <input type="radio" name="Msgs" value="1" checked />
                                 Success
                             </label>
                             <label class="radio">
-                                <input type="radio" name="Msgs" value="info" />Info
+                                <input type="radio" name="Msgs" value="2" />Info
                             </label>
                             <label class="radio">
-                                <input type="radio" name="Msgs" value="warning" />Warning
+                                <input type="radio" name="Msgs" value="3" />Warning
                             </label>
                             <label class="radio">
-                                <input type="radio" name="Msgs" value="error" />Error
+                                <input type="radio" name="Msgs" value="4" />Error
+                            </label>
+                            <label class="radio">
+                                <input type="radio" name="Msgs" value="" />Empty Alert Type
                             </label>
                         </div>
                     </div>
@@ -202,13 +205,14 @@
 
         $(function () {
             var i = -1;
-          
+            var MsgCount = 0;
 
             var getMessage = function () {
                 var msgs = ['Model Dialog for Web Applications',
-                    'You like this Dialog',
+                    '<marquee>You like this Dialog</marquee>',
                     'Customized alert Box for your Website!',
                     'You can Change, What you like.',
+                    '<div><input id="txtClick" type="text" placeholder="Enter your Name" class="input-large" value="" /><button type="button" class="btn btn-primary" id="btnClick">Click for alert</button></div>',
                     'You Can Download in Nuget.Org and type in search SPMsgBox <a href="https://www.nuget.org/packages/SpMsgbox/" target="_blank">Download</a>'
                 ];
                 i++;
@@ -219,10 +223,10 @@
                 return msgs[i];
             };
             $('#showMsg').click(function () {
-                var Msg = '',tit='';
+                var Msg = '', tit = '';
 
                 var MsgIndex = MsgCount++;
-             
+
                 var text = $('#message').val();
                 var title = $('#title').val() || '';
                 var closeText = $('#closeText').val() || '';
@@ -235,9 +239,11 @@
                 var pBarColor = $('#pBarColor');
                 var textColor = $('#textColor');
                 var titleColor = $('#titleColor');
-
+                var type = $("#MsgTypeGroup input:radio:checked").val();
+                var typetext = "";
+                var Jmsg = "";
                 var options = {
-                    type: $("#MsgTypeGroup input:radio:checked").val(),
+
 
                     autoHide: $('#autoHide').prop('checked'),
                     progressBar: $('#progressBar').prop('checked'),
@@ -245,7 +251,7 @@
                     position: $('#positionGroup input:radio:checked').val() || 'top-right'
 
                 };
- 
+
 
 
                 if (stayTime.val().length) {
@@ -272,44 +278,58 @@
                 if (titleColor.val().length) {
                     options.titleColor = '#' + titleColor.val();
                 }
-              
+
                 if (!text) {
-                   Msg = getMessage();
+                    Msg = getMessage();
                 } else { Msg = text; }
                 if (closeText.length) {
                     options.closeText = closeText;
                 }
-                 if (title.length) {
-                     tit = title;
+                if (title.length) {
+                    tit = title;
                 }
                 if (iconUrl.val().length) {
                     options.iconUrl = iconUrl.val();
                 }
-                $.SPMsgBox.options=options;
-                var Jmsg = $.SPMsgBox.Show(Msg,tit);
+                $.SPMsgBox.options = options;
 
 
-              if (Jmsg.find('#okBtn').length) {
-                  Jmsg.delegate('#okBtn', 'click', function () {
-                      alert('you clicked me. Count #' + MsgIndex + '. goodbye!');
-                              Jmsg.remove();
-                  });
-              }
-              if (Jmsg.find('#surpriseBtn').length) {
-                  Jmsg.delegate('#surpriseBtn', 'click', function () {
-                      alert('Surprise! you clicked me. count #' + MsgIndex + '. You could perform an action here.');
+                switch (type) {
+                    case "1": typetext = 'ShowSuccess'; Jmsg = $.SPMsgBox.ShowSuccess(Msg, tit); break;
+                    case "2": typetext = 'ShowInfo'; Jmsg = $.SPMsgBox.ShowInfo(Msg, tit); break;
+                    case "3": typetext = 'ShowWarning'; Jmsg = $.SPMsgBox.ShowWarning(Msg, tit); break;
+                    case "4": typetext = 'ShowError'; Jmsg = $.SPMsgBox.ShowError(Msg, tit); break;
+                    default: typetext = 'Show'; Jmsg = $.SPMsgBox.Show(Msg, tit); break;
+
+                };
+
+
+
+
+                if (Jmsg.find('#btnClick').length) {
+                    Jmsg.delegate('#btnClick', 'click', function () {
+                        var text = Jmsg.find('#txtClick').val();
+                        alert('Surprise! Hi ' + text);
+
                     });
-              }
-              Msg = "\"" + Msg + "\"";
-              tit = "\"" + tit + "\"";
-              if (title.length) {
-                  $("#MsgOptions").text("Syntax: $.SPMsgBox.Show(" + Msg + "," + tit + ")\n\$.SPMsgBox.options = " + JSON.stringify(options, null, 2));
-              } else { $("#MsgOptions").text("Syntax: $.SPMsgBox.Show(" + Msg + ")\n\$.SPMsgBox.options = " + JSON.stringify(options, null, 2)); }
+                }
+                if (Jmsg.find('#surpriseBtn').length) {
+                    Jmsg.delegate('#surpriseBtn', 'click', function () {
+                        alert('you clicked me. goodbye!');
+                        Jmsg.remove();
+                    });
+                }
+
+                Msg = "\"" + Msg + "\"";
+                tit = "\"" + tit + "\"";
+                if (title.length) {
+                    $("#MsgOptions").text("Syntax: $.SPMsgBox." + typetext + "(" + Msg + "," + tit + ")\n\$.SPMsgBox.options = " + JSON.stringify(options, null, 2));
+                } else { $("#MsgOptions").text("Syntax: $.SPMsgBox." + typetext + "(" + Msg + ")\n\$.SPMsgBox.options = " + JSON.stringify(options, null, 2)); }
 
 
 
             });
-         
+
         })
     </script>
 </body>
