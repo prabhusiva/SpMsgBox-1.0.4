@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <title>SPMsgBox Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="Free Web tutorials">
+    <meta name="description" content="Free Web tutorials">
     <!--<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">-->
     <link href="https://docs.google.com/uc?export=download&id=0ByW19urA2-DAbG12VHRJMGxGem8" rel="stylesheet">
 
@@ -17,8 +17,7 @@
     <link href="https://docs.google.com/uc?export=download&id=0ByW19urA2-DAbGtGTjktVGxKWFE" rel="stylesheet" />
 
     <style>
-        .row
-        {
+        .row {
             margin-left: 0;
         }
     </style>
@@ -42,7 +41,7 @@
                         </div>
                     </div>
                     <div class="control-group">
-                         
+
 
                         <div class="controls">
                             <label class="checkbox" for="autoHide">
@@ -93,7 +92,7 @@
                             <label class="radio">
                                 <input type="radio" name="positions" value="top-left" />Top Left
                             </label>
-                              
+
                             <label class="radio">
                                 <input type="radio" name="positions" value="middle-right" />Middle Right
                             </label>
@@ -112,7 +111,7 @@
                             <label class="radio">
                                 <input type="radio" name="positions" value="bottom-left" />Bottom left
                             </label>
-                            
+
 
                         </div>
                     </div>
@@ -162,7 +161,7 @@
 
             <div class="row">
                 <button type="button" class="btn btn-primary" id="showtoast">Show Msg</button>
-                
+
             </div>
 
             <div class="row" style='margin-top: 25px;'>
@@ -172,11 +171,11 @@
     </section>
 
     <footer class="row">
-       <!-- <h2>Links</h2>-->
+        <h2>Links to Download</h2>
 
         <ul>
-           <!-- <li><a href="http://nuget.org/packages/toastr">NuGet</a></li>
-            <li><a href="https://github.com/CodeSeven/toastr">GitHub</a></li>-->
+            <li><a href="https://www.nuget.org/packages/SpMsgbox/">NuGet</a></li>
+            <li><a href="https://github.com/prabhusiva/SpMsgBox">GitHub</a></li>
         </ul>
     </footer>
 
@@ -207,8 +206,8 @@
             var $toastlast;
 
             var getMessage = function () {
-                var msgs = ['Model Dialog for Web Applications',                     
-                    'Are you the like this',
+                var msgs = ['Model Dialog for Web Applications',
+                    'You like this Dialog',
                     'Customized alert Box for your Website!',
                     'You can Change, What you like.',
                     'You Can Download in Nuget.Org and type in search SPMsgBox <a href="https://www.nuget.org/packages/SpMsgbox/" target="_blank">Download</a>'
@@ -221,6 +220,7 @@
                 return msgs[i];
             };
             $('#showtoast').click(function () {
+                var Msg = '',tit='';
 
                 var toastIndex = toastCount++;
              //   var type = $("#toastTypeGroup input:radio:checked").val();
@@ -239,7 +239,7 @@
 
                 var options = {
                     type : $("#toastTypeGroup input:radio:checked").val(),
-                    
+
                     autoHide: $('#autoHide').prop('checked'),
                     progressBar: $('#progressBar').prop('checked'),
                     hideCloseIcon: $('#hideCloseIcon').prop('checked'),
@@ -253,7 +253,7 @@
                 //    };
                 //}
 
-              
+
                 if (stayTime.val().length) {
                     options.stayTime = stayTime.val();
                 }
@@ -278,21 +278,22 @@
                 if (titleColor.val().length) {
                     options.titleColor = '#' + titleColor.val();
                 }
-
+              
                 if (!text) {
-                    options.Msg = getMessage();
-                } else { options.Msg = text; }
+                   Msg = getMessage();
+                } else { Msg = text; }
                 if (closeText.length) {
                     options.closeText = closeText;
-                }if (title.length) {
-                    options.title = title;
+                }
+                 if (title.length) {
+                     tit = title;
                 }
                 if (iconUrl.val().length) {
                     options.iconUrl = iconUrl.val();
                 }
-                
-                var Jmsg = $.SPMsgBox.Show(options);
-                
+                $.SPMsgBox.options=options;
+                var Jmsg = $.SPMsgBox.Show(Msg,tit);
+
 
               if (Jmsg.find('#okBtn').length) {
                   Jmsg.delegate('#okBtn', 'click', function () {
@@ -304,14 +305,15 @@
                   Jmsg.delegate('#surpriseBtn', 'click', function () {
                         alert('Surprise! you clicked me. i was toast #' + toastIndex + '. You could perform an action here.');
                     });
-                }
-              $("#toastrOptions").text("Syntax: $.SPMsgBox.Show("
-                                + "options)\n\options = "
-                                + JSON.stringify(options, null, 2)
-                );
+              }
+              Msg = "\"" + Msg + "\"";
+              tit = "\"" + tit + "\"";
+              if (title.length) {
+                  $("#toastrOptions").text("Syntax: $.SPMsgBox.Show(" + Msg + "," + tit + ")\n\$.SPMsgBox.options = " + JSON.stringify(options, null, 2));
+              } else { $("#toastrOptions").text("Syntax: $.SPMsgBox.Show(" + Msg + ")\n\$.SPMsgBox.options = " + JSON.stringify(options, null, 2)); }
 
-         
-               
+
+
             });
             function getLastToast() {
                 return $toastlast;
